@@ -1,26 +1,61 @@
 package com.example.newsapplication;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
 public class MainActivity extends AppCompatActivity {
+
+    private List<NewsBean> newsbeanlist = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        for(int i = 0; i < 20; i++)
+        {
+            String title = "敢于斗争，敢于胜利";
+            String source = "中央纪委国家监委网站";
+            String imageurl = "https://img0.baidu.com/it/u=236392046,3444623050&fm=26&fmt=auto&gp=0.jpg";
+            NewsBean newsBean = new NewsBean(title, source, imageurl);
+            newsbeanlist.add(newsBean);
+        }
+
+        RecyclerView mainrecyclerview = findViewById(R.id.newsitem_recyclerview);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mainrecyclerview.setLayoutManager(linearLayoutManager);
+        mainrecyclerview.setAdapter(new NewsItemAdapter(MainActivity.this, newsbeanlist));
+
         Toolbar toolbarmain = findViewById(R.id.toolbarmain);
         setSupportActionBar(toolbarmain);
     }
@@ -53,5 +88,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+
 
 
