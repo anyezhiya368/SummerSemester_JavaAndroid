@@ -26,7 +26,6 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
 
     class NewsHolder extends RecyclerView.ViewHolder{
-        public LinearLayout mnewsitem;
         public TextView titletv;
         public TextView sourcetv;
         public com.makeramen.roundedimageview.RoundedImageView image;
@@ -34,16 +33,10 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
         public NewsHolder(View newsitem){
             super(newsitem);
 
-            mnewsitem = newsitem.findViewById(R.id.newsitemlayout);
             titletv = newsitem.findViewById(R.id.newstitle);
             sourcetv = newsitem.findViewById(R.id.newssource);
             image = newsitem.findViewById(R.id.newsimage);
-            mnewsitem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(context, "Hello",Toast.LENGTH_SHORT);
-                }
-            });
+
         }
     }
 
@@ -60,6 +53,13 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
             newsholder.titletv.setText(newsBeanList.get(position).getTitle());
             newsholder.sourcetv.setText(newsBeanList.get(position).getSource());
             Glide.with(context).load(newsBeanList.get(position).getImageurl()).into(newsholder.image);
+
+            newsholder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "Hello" + holder.getAdapterPosition(), Toast.LENGTH_LONG).show();
+                }
+            });
         }
 
         @Override

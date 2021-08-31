@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
 
         for(int i = 0; i < 20; i++)
         {
-            String title = "敢于斗争，敢于胜利";
+            String title = "敢于斗争，敢于胜利" + (i + 1);
             String source = "中央纪委国家监委网站";
             String imageurl = "https://img0.baidu.com/it/u=236392046,3444623050&fm=26&fmt=auto&gp=0.jpg";
             NewsBean newsBean = new NewsBean(title, source, imageurl);
