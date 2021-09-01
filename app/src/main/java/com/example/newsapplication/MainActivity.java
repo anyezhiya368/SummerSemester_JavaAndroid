@@ -25,39 +25,43 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.newsapplication.newsmodel.NewsBean;
+import com.example.newsapplication.newsmodel.NewsSource;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class MainActivity extends AppCompatActivity {
 
     private List<NewsBean> newsbeanlist = new ArrayList<>();
+    private RecyclerView mainrecyclerview;
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        for(int i = 0; i < 20; i++)
-        {
-            String title = "敢于斗争，敢于胜利" + (i + 1);
-            String source = "中央纪委国家监委网站";
-            String imageurl = "https://img0.baidu.com/it/u=236392046,3444623050&fm=26&fmt=auto&gp=0.jpg";
-            NewsBean newsBean = new NewsBean(title, source, imageurl);
-            newsbeanlist.add(newsBean);
-        }
+        Toolbar toolbarmain = findViewById(R.id.toolbarmain);
+        setSupportActionBar(toolbarmain);
 
-        RecyclerView mainrecyclerview = findViewById(R.id.newsitem_recyclerview);
+        mainrecyclerview = findViewById(R.id.newsitem_recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mainrecyclerview.setLayoutManager(linearLayoutManager);
         mainrecyclerview.setAdapter(new NewsItemAdapter(MainActivity.this, newsbeanlist));
 
-        Toolbar toolbarmain = findViewById(R.id.toolbarmain);
-        setSupportActionBar(toolbarmain);
+        SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2021-08-20&endDate=2021-08-30&words=拜登&categories=科技");
+        searchThread.start();
     }
 
     @Override
@@ -87,7 +91,50 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    private class SearchThread extends Thread{
+        private String url;
+
+        public SearchThread(String urlstring){
+            this.url = urlstring;
+        }
+
+        @Override
+        public void run() {
+            synchronized (MainActivity.class) {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url(url)
+                        .build();
+                Response response = null;
+                try {
+                    response = client.newCall(request).execute();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String json = null;
+                try {
+                    json = response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                //Log.e("TAG", json);
+                Gson gson = new Gson();
+                NewsSource newsSource = gson.fromJson(json, NewsSource.class);
+                List<NewsBean> data = newsSource.getData();
+                newsbeanlist.clear();
+                newsbeanlist.addAll(data);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mainrecyclerview.getAdapter().notifyDataSetChanged();
+                    }
+                });
+            }
+        }
+    }
 }
+
 
 
 
