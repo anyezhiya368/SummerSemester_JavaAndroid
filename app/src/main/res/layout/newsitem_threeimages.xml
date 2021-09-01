@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/news_item_no_image"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_marginLeft="12dp"
+    android:layout_marginRight="12dp"
+    android:layout_height="180dp">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFF8F8F8"/>
+
+    <RelativeLayout
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/threetitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="小学作文《没用的老爸》：父亲看后气到“脸青”，全班都笑到飙泪"
+            android:textSize="18sp"
+            android:textColor="#FF212121"
+            android:maxLines="2"
+            android:ellipsize="end"/>
+
+        <LinearLayout
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/threetitle"
+            android:layout_above="@+id/threesource"
+            android:orientation="horizontal">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/threenewsimage1"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                app:riv_corner_radius="3dip"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:paddingRight="1dp"
+                android:src="@drawable/newstest_image"
+                android:scaleType="fitXY"/>
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/threenewsimage2"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                app:riv_corner_radius="3dip"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:paddingRight="1dp"
+                android:paddingLeft="1dp"
+                android:layout_weight="1"
+                android:src="@drawable/newstest_image"
+                android:scaleType="fitXY"/>
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/threenewsimage3"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                app:riv_corner_radius="3dip"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:paddingLeft="1dp"
+                android:layout_weight="1"
+                android:src="@drawable/newstest_image"
+                android:scaleType="fitXY"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/threesource"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="A探长说育儿"
+            android:textColor="#FFBFBFBF"
+            android:textSize="10sp"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#FFF8F8F8"/>
+
+</LinearLayout>
