@@ -19,6 +19,7 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/no_image_tilte"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -29,6 +30,7 @@
             android:textSize="18dp"/>
 
         <TextView
+            android:id="@+id/no_image_source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"

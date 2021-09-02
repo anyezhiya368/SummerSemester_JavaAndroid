@@ -123,6 +123,15 @@ public class MainActivity extends AppCompatActivity {
                 NewsSource newsSource = gson.fromJson(json, NewsSource.class);
                 List<NewsBean> data = newsSource.getData();
                 newsbeanlist.clear();
+                int count = 0;
+                for(int i = 0; i < data.size(); i++){
+                    if(data.get(i).getImageString().equals("[]") && count < 3){
+                        newsbeanlist.add(data.get(i));
+                        data.remove(i);
+                        i--;
+                        count++;
+                    }
+                }
                 newsbeanlist.addAll(data);
                 runOnUiThread(new Runnable() {
                     @Override

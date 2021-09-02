@@ -2,6 +2,7 @@ package com.example.newsapplication.newsmodel;
 
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NewsBean {
@@ -73,25 +74,45 @@ public class NewsBean {
         this.publishTime = publishTimestring;
     }
 
-    public String getImage() {
+    public String getImageString(){return image;}
+
+    public List<String> getImage() {
+        Log.e("TAG", image);
+        List<String> resultlist = new ArrayList<>();
+        resultlist.clear();
         if (image.equals("[]"))
-            return "https://img0.baidu.com/it/u=236392046,3444623050&fm=26&fmt=auto&gp=0.jpg";
-        StringBuffer result = new StringBuffer(1000);
-        result.append(image);
-        result.delete(0, 1);
-        // 得到第一个逗号的位置
-        while (true) {
-            int i = 0;
-            char cur = result.charAt(i);
-            while ((cur != ',') && (cur != ']')) {
-                i++;
-                cur = result.charAt(i);
-            }
-            if (result.charAt(i - 1) != 'f') {
-                //Log.e("TAG", String.valueOf(result.substring(0, i)));
-                return result.substring(0, i);
-            } else {
-                result.delete(0, i + 2);
+        {
+            resultlist.add("https://img0.baidu.com/it/u=236392046,3444623050&fm=26&fmt=auto&gp=0.jpg");
+            return resultlist;
+        }
+        else {
+            StringBuffer result = new StringBuffer(1000);
+            result.append(image);
+            result.delete(0, 1);
+            // 得到第一个逗号的位置
+            while (true) {
+                int i = 0;
+                char cur = result.charAt(i);
+                while ((cur != ',') && (cur != ']')) {
+                    i++;
+                    cur = result.charAt(i);
+                }
+                if (result.charAt(i) != ']') {
+                    if(result.charAt(i - 1) != 'f') {
+                        String temp = result.substring(0, i);
+                        resultlist.add(temp);
+                        result.delete(0, i + 2);
+                    }else{
+                        result.delete(0, i + 2);
+                    }
+                }else{
+                    if(result.charAt(i - 1) != 'f'){
+                        String temp = result.substring(0, i);
+                        resultlist.add(temp);
+                        return resultlist;
+                    }else
+                        return resultlist;
+                }
             }
         }
     }
