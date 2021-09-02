@@ -28,6 +28,8 @@ import com.bumptech.glide.Glide;
 import com.example.newsapplication.newsmodel.NewsBean;
 import com.example.newsapplication.newsmodel.NewsSource;
 import com.google.gson.Gson;
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +45,7 @@ import okhttp3.Response;
 public class MainActivity extends AppCompatActivity {
 
     private List<NewsBean> newsbeanlist = new ArrayList<>();
-    private RecyclerView mainrecyclerview;
+    private XRecyclerView mainrecyclerview;
 
 
     @Override
@@ -60,8 +62,35 @@ public class MainActivity extends AppCompatActivity {
         mainrecyclerview.setLayoutManager(linearLayoutManager);
         mainrecyclerview.setAdapter(new NewsItemAdapter(MainActivity.this, newsbeanlist));
 
+        mainrecyclerview.setPullRefreshEnabled(true);
+        mainrecyclerview.setLoadingMoreEnabled(true);
+        mainrecyclerview.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
+        mainrecyclerview.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
+        mainrecyclerview.getDefaultFootView().setLoadingHint("Loading more data");
+        mainrecyclerview.getDefaultFootView().setNoMoreHint("Finish loading");
+
         SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2021-08-20&endDate=2021-08-30&words=拜登&categories=科技");
         searchThread.start();
+
+        mainrecyclerview.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                //refresh data here
+                SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2021-08-20&endDate=2021-08-30&words=清华&categories=娱乐");
+                searchThread.start();
+                mainrecyclerview.refreshComplete();
+            }
+
+            @Override
+            public void onLoadMore() {
+                // load more data here
+                SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=30&startDate=2021-08-20&endDate=2021-08-30&words=拜登&categories=娱乐");
+                searchThread.start();
+                mainrecyclerview.setLimitNumberToCallLoadMore(2);
+                mainrecyclerview.loadMoreComplete();
+            }
+        });
+
     }
 
     @Override
@@ -123,15 +152,6 @@ public class MainActivity extends AppCompatActivity {
                 NewsSource newsSource = gson.fromJson(json, NewsSource.class);
                 List<NewsBean> data = newsSource.getData();
                 newsbeanlist.clear();
-                int count = 0;
-                for(int i = 0; i < data.size(); i++){
-                    if(data.get(i).getImageString().equals("[]") && count < 3){
-                        newsbeanlist.add(data.get(i));
-                        data.remove(i);
-                        i--;
-                        count++;
-                    }
-                }
                 newsbeanlist.addAll(data);
                 runOnUiThread(new Runnable() {
                     @Override
@@ -140,6 +160,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mainrecyclerview != null){
+            mainrecyclerview.destroy(); // this will totally release XR's memory
+            mainrecyclerview = null;
         }
     }
 }

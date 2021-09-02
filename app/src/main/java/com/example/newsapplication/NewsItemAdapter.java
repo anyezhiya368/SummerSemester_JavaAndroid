@@ -56,6 +56,21 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
 
+        class BigImageHolder extends RecyclerView.ViewHolder{
+            public TextView titletv;
+            public TextView sourcetv;
+            public com.makeramen.roundedimageview.RoundedImageView image;
+
+            public BigImageHolder(View newsitem){
+                super(newsitem);
+
+                titletv = newsitem.findViewById(R.id.big_image_title);
+                sourcetv = newsitem.findViewById(R.id.big_image_source);
+                image = newsitem.findViewById(R.id.big_image_image);
+
+            }
+        }
+
         class ThreeImageHolder extends RecyclerView.ViewHolder{
             public TextView titletv;
             public TextView sourcetv;
@@ -84,6 +99,9 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                 case 1:
                     View newsitem_one = LayoutInflater.from(context).inflate(R.layout.newsitem_oneimage, parent, false);
                     return new OneImageHolder(newsitem_one);
+                case 100:
+                    View newsitem_big = LayoutInflater.from(context).inflate(R.layout.newsitem_bigimage, parent, false);
+                    return new BigImageHolder(newsitem_big);
             }
             View newsitem_three = LayoutInflater.from(context).inflate(R.layout.newsitem_threeimages, parent, false);
             return new ThreeImageHolder(newsitem_three);
@@ -100,7 +118,13 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(context, DetailActivity.class);
-                        intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition()).getUrl());
+                        intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
+                        intent.putExtra("image", newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
+                        intent.putExtra("video",newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
+                        intent.putExtra("title",newsBeanList.get(holder.getAdapterPosition() - 1).getTitle());
+                        intent.putExtra("publisher",newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
+                        intent.putExtra("time",newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
+                        intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
                         context.startActivity(intent);
                     }
                 });
@@ -114,11 +138,17 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(context, DetailActivity.class);
-                        intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition()).getUrl());
+                        intent.putExtra("image",newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
+                        intent.putExtra("video",newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
+                        intent.putExtra("title",newsBeanList.get(holder.getAdapterPosition() - 1).getTitle());
+                        intent.putExtra("publisher",newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
+                        intent.putExtra("time",newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
+                        intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
+                        intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
                         context.startActivity(intent);
                     }
                 });
-            }else{
+            }else if(holder instanceof ThreeImageHolder){
                 ThreeImageHolder newsholder = (ThreeImageHolder) holder;
                 newsholder.titletv.setText(newsBeanList.get(position).getTitle());
                 newsholder.sourcetv.setText(newsBeanList.get(position).getPublisher());
@@ -130,7 +160,33 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(context, DetailActivity.class);
-                        intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition()).getUrl());
+                        intent.putExtra("image",newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
+                        intent.putExtra("video",newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
+                        intent.putExtra("title",newsBeanList.get(holder.getAdapterPosition() - 1).getTitle());
+                        intent.putExtra("publisher",newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
+                        intent.putExtra("time",newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
+                        intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
+                        intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
+                        context.startActivity(intent);
+                    }
+                });
+            }else{
+                BigImageHolder newsholder = (BigImageHolder) holder;
+                newsholder.titletv.setText(newsBeanList.get(position).getTitle());
+                newsholder.sourcetv.setText(newsBeanList.get(position).getPublisher());
+                Glide.with(context).load(newsBeanList.get(position).getImage().get(0)).into(newsholder.image);
+
+                newsholder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra("image",newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
+                        intent.putExtra("video",newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
+                        intent.putExtra("title",newsBeanList.get(holder.getAdapterPosition() - 1).getTitle());
+                        intent.putExtra("publisher",newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
+                        intent.putExtra("time",newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
+                        intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
+                        intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
                         context.startActivity(intent);
                     }
                 });
@@ -140,9 +196,15 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public int getItemViewType(int position) {
             //needed to be overided
-        if(position < 3)
+        if(newsBeanList.get(position).getImage().size() == 0)
             return 0;
-        return 1;
+        if(newsBeanList.get(position).getImage().size() >= 3)
+            return 3;
+        double random = Math.random();
+        if(newsBeanList.get(position).getTitle().length() % 2 == 0)
+            return 100;
+        else
+            return 1;
     }
 
     @Override

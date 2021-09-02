@@ -15,8 +15,15 @@ public class NewsBean {
     private List<Puborg> puborgList;
     private String publisher;
     private String category;
+    private String content;
 
+    public String getContent() {
+        return content;
+    }
 
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getCategory() {
         return category;
@@ -77,12 +84,11 @@ public class NewsBean {
     public String getImageString(){return image;}
 
     public List<String> getImage() {
-        Log.e("TAG", image);
+        //Log.e("TAG", image);
         List<String> resultlist = new ArrayList<>();
         resultlist.clear();
         if (image.equals("[]"))
         {
-            resultlist.add("https://img0.baidu.com/it/u=236392046,3444623050&fm=26&fmt=auto&gp=0.jpg");
             return resultlist;
         }
         else {
