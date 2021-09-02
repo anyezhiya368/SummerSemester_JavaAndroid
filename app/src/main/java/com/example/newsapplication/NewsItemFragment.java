@@ -2,6 +2,7 @@ package com.example.newsapplication;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,19 +67,29 @@ public class NewsItemFragment extends Fragment {
         mainrecyclerview.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2020-08-20&endDate=2021-08-30&words=&categories="+title);
+                        searchThread.start();
+                        mainrecyclerview.refreshComplete();
+                    }
+                },1000);
                 //refresh data here
-                SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2020-08-20&endDate=2021-08-30&words=&categories="+title);
-                searchThread.start();
-                mainrecyclerview.refreshComplete();
             }
 
             @Override
             public void onLoadMore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=30&startDate=2020-08-20&endDate=2021-08-30&words=&categories="+title);
+                        searchThread.start();
+                        mainrecyclerview.setLimitNumberToCallLoadMore(2);
+                        mainrecyclerview.loadMoreComplete();
+                    }
+                },  1000);
                 // load more data here
-                SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=30&startDate=2020-08-20&endDate=2021-08-30&words=&categories="+title);
-                searchThread.start();
-                mainrecyclerview.setLimitNumberToCallLoadMore(2);
-                mainrecyclerview.loadMoreComplete();
             }
         });
 
