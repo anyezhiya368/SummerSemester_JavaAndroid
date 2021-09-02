@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -69,16 +71,67 @@ public class MainActivity extends AppCompatActivity {
         newstypeList.add("健康");
         newstypeList.add("社会");
 
+        List<String> curnewslist = new ArrayList<>();
+        Intent intent = getIntent();
+        boolean entertainmentchecked = intent.getBooleanExtra("娱乐", true);
+        if(entertainmentchecked)
+            curnewslist.add("娱乐");
+        boolean militarychecked = intent.getBooleanExtra("军事",true);
+        if(militarychecked)
+            curnewslist.add("军事");
+        boolean financechecked = intent.getBooleanExtra("财经",true);
+        if(financechecked)
+            curnewslist.add("财经");
+        boolean sportchecked = intent.getBooleanExtra("体育",true);
+        if(sportchecked)
+            curnewslist.add("体育");
+        boolean technologychecked = intent.getBooleanExtra("科技",true);
+        if(technologychecked)
+            curnewslist.add("科技");
+        boolean carchecked = intent.getBooleanExtra("汽车",true);
+        if(carchecked)
+            curnewslist.add("汽车");
+        boolean educationchecked = intent.getBooleanExtra("教育",true);
+        if(educationchecked)
+            curnewslist.add("教育");
+        boolean culturechecked = intent.getBooleanExtra("文化",true);
+        if(culturechecked)
+            curnewslist.add("文化");
+        boolean healthchecked = intent.getBooleanExtra("健康",true);
+        if(healthchecked)
+            curnewslist.add("健康");
+        boolean societychecked = intent.getBooleanExtra("社会",true);
+        if(societychecked)
+            curnewslist.add("社会");
+
+
         for (String newstype:
-             newstypeList) {
+             curnewslist) {
             fragmentList.add(new NewsItemFragment(newstype));
         }
 
         TabLayout tabLayout = findViewById(R.id.main_tablayout);
         ViewPager viewPager = findViewById(R.id.main_newspager);
-        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragmentList, newstypeList));
+        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragmentList, curnewslist));
 
         tabLayout.setupWithViewPager(viewPager);
+
+        Button tablayouticon = findViewById(R.id.tablayout_icon);
+        tablayouticon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_send = new Intent(MainActivity.this, SetTypeActivity.class);
+                for (String newstype:
+                     newstypeList) {
+                    if(curnewslist.contains(newstype)){
+                        intent_send.putExtra(newstype, true);
+                        //Log.e("TAG",newstype);
+                    }else
+                        intent_send.putExtra(newstype,false);
+                }
+                startActivity(intent_send);
+            }
+        });
     }
 
     @Override

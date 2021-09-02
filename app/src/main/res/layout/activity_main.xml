@@ -20,19 +20,41 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         </androidx.appcompat.widget.Toolbar>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/main_tablayout"
+        <RelativeLayout
             android:layout_width="match_parent"
-            app:tabMode="scrollable"
-            app:tabBackground="@color/white"
-            app:tabIndicatorColor="@color/green"
-            app:tabIndicatorHeight="2dp"
-            app:tabSelectedTextColor="@color/green"
-            android:textSize="15sp"
-            android:textColor="#FF212121"
-            app:tabIndicator="@drawable/indicator"
             android:layout_height="40dp">
-        </com.google.android.material.tabs.TabLayout>
+
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_alignParentRight="true"
+                android:elevation="10dp"
+                android:background="@drawable/navigation"
+                android:id="@+id/tablayout_icon"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/tablayout_icon">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:layout_alignParentLeft="true"
+                    android:id="@+id/main_tablayout"
+                    android:layout_width="match_parent"
+                    app:tabMode="scrollable"
+                    app:tabBackground="@color/white"
+                    app:tabIndicatorColor="@color/green"
+                    app:tabIndicatorHeight="2dp"
+                    app:tabSelectedTextColor="@color/green"
+                    android:textSize="15sp"
+                    android:textColor="#FF212121"
+                    android:layout_height="match_parent">
+                </com.google.android.material.tabs.TabLayout>
+
+            </RelativeLayout>
+        </RelativeLayout>
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/main_newspager"
