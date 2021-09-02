@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.newsapplication.newsmodel.NewsBean;
 import com.example.newsapplication.newsmodel.NewsSource;
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
@@ -44,9 +46,8 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    private List<NewsBean> newsbeanlist = new ArrayList<>();
-    private XRecyclerView mainrecyclerview;
-
+    List<NewsItemFragment> fragmentList = new ArrayList<>();
+    List<String> newstypeList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -56,41 +57,28 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbarmain = findViewById(R.id.toolbarmain);
         setSupportActionBar(toolbarmain);
 
-        mainrecyclerview = findViewById(R.id.newsitem_recyclerview);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MainActivity.this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mainrecyclerview.setLayoutManager(linearLayoutManager);
-        mainrecyclerview.setAdapter(new NewsItemAdapter(MainActivity.this, newsbeanlist));
+        //娱乐、军事、教育、文化、健康、财经、体育、汽车、科技、社会
+        newstypeList.add("娱乐");
+        newstypeList.add("军事");
+        newstypeList.add("财经");
+        newstypeList.add("体育");
+        newstypeList.add("科技");
+        newstypeList.add("汽车");
+        newstypeList.add("教育");
+        newstypeList.add("文化");
+        newstypeList.add("健康");
+        newstypeList.add("社会");
 
-        mainrecyclerview.setPullRefreshEnabled(true);
-        mainrecyclerview.setLoadingMoreEnabled(true);
-        mainrecyclerview.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
-        mainrecyclerview.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
-        mainrecyclerview.getDefaultFootView().setLoadingHint("Loading more data");
-        mainrecyclerview.getDefaultFootView().setNoMoreHint("Finish loading");
+        for (String newstype:
+             newstypeList) {
+            fragmentList.add(new NewsItemFragment(newstype));
+        }
 
-        SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2021-08-20&endDate=2021-08-30&words=拜登&categories=科技");
-        searchThread.start();
+        TabLayout tabLayout = findViewById(R.id.main_tablayout);
+        ViewPager viewPager = findViewById(R.id.main_newspager);
+        viewPager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragmentList, newstypeList));
 
-        mainrecyclerview.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-                //refresh data here
-                SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2021-08-20&endDate=2021-08-30&words=清华&categories=娱乐");
-                searchThread.start();
-                mainrecyclerview.refreshComplete();
-            }
-
-            @Override
-            public void onLoadMore() {
-                // load more data here
-                SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=30&startDate=2021-08-20&endDate=2021-08-30&words=拜登&categories=娱乐");
-                searchThread.start();
-                mainrecyclerview.setLimitNumberToCallLoadMore(2);
-                mainrecyclerview.loadMoreComplete();
-            }
-        });
-
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -121,56 +109,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class SearchThread extends Thread{
-        private String url;
-
-        public SearchThread(String urlstring){
-            this.url = urlstring;
-        }
-
-        @Override
-        public void run() {
-            synchronized (MainActivity.class) {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(url)
-                        .build();
-                Response response = null;
-                try {
-                    response = client.newCall(request).execute();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                String json = null;
-                try {
-                    json = response.body().string();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //Log.e("TAG", json);
-                Gson gson = new Gson();
-                NewsSource newsSource = gson.fromJson(json, NewsSource.class);
-                List<NewsBean> data = newsSource.getData();
-                newsbeanlist.clear();
-                newsbeanlist.addAll(data);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mainrecyclerview.getAdapter().notifyDataSetChanged();
-                    }
-                });
-            }
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if(mainrecyclerview != null){
-            mainrecyclerview.destroy(); // this will totally release XR's memory
-            mainrecyclerview = null;
-        }
-    }
 }
 
 

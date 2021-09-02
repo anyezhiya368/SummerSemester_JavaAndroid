@@ -200,7 +200,6 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
             return 0;
         if(newsBeanList.get(position).getImage().size() >= 3)
             return 3;
-        double random = Math.random();
         if(newsBeanList.get(position).getTitle().length() % 2 == 0)
             return 100;
         else

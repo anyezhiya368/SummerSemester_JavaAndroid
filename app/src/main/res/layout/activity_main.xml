@@ -20,11 +20,25 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         </androidx.appcompat.widget.Toolbar>
 
-        <com.jcodecraeer.xrecyclerview.XRecyclerView
-            android:id="@+id/newsitem_recyclerview"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/main_tablayout"
+            android:layout_width="match_parent"
+            app:tabMode="scrollable"
+            app:tabBackground="@color/white"
+            app:tabIndicatorColor="@color/green"
+            app:tabIndicatorHeight="2dp"
+            app:tabSelectedTextColor="@color/green"
+            android:textSize="15sp"
+            android:textColor="#FF212121"
+            app:tabIndicator="@drawable/indicator"
+            android:layout_height="40dp">
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/main_newspager"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </com.jcodecraeer.xrecyclerview.XRecyclerView>
+        </androidx.viewpager.widget.ViewPager>
 
     </LinearLayout>
 
