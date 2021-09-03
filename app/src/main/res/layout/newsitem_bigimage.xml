@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/newsitem_oneimage"
     android:layout_width="match_parent"
-    android:layout_height="290dp"
+    android:layout_height="wrap_content"
     android:paddingLeft="12dp"
     android:paddingRight="12dp"
     android:orientation="vertical">
@@ -31,8 +31,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/big_image_source"
+            android:layout_height="210dp"
+            android:id="@+id/big_image_imlayout"
             android:layout_below="@id/big_image_title"
             android:paddingTop="5dp"
             android:paddingBottom="5dp">
@@ -55,6 +55,7 @@
             android:id="@+id/big_image_source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/big_image_imlayout"
             android:layout_alignParentBottom="true"
             android:text="中央纪委国家监委网站"
             android:textSize="10sp"

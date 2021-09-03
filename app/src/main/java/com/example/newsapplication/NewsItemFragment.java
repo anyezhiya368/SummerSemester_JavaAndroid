@@ -70,8 +70,8 @@ public class NewsItemFragment extends Fragment {
         mainrecyclerview.setLoadingMoreEnabled(true);
         mainrecyclerview.setRefreshProgressStyle(ProgressStyle.BallSpinFadeLoader);
         mainrecyclerview.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
-        mainrecyclerview.getDefaultFootView().setLoadingHint("Loading more data");
-        mainrecyclerview.getDefaultFootView().setNoMoreHint("Finish loading");
+        mainrecyclerview.getDefaultFootView().setLoadingHint("正在加载");
+        mainrecyclerview.getDefaultFootView().setNoMoreHint("已经到底了");
 
         SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate="+starttime+"&endDate="+endtime+"&words="+keyword+"&categories="+title);
         searchThread.start();
@@ -82,7 +82,9 @@ public class NewsItemFragment extends Fragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2020-08-20&endDate=2021-08-30&words=&categories="+title);
+                        SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2021-09-02&endDate=2021-09-03&words="+keyword+"&categories="+title);
+                        starttime = "2021-09-02";
+                        endtime = "2021-09-03";
                         searchThread.start();
                         mainrecyclerview.refreshComplete();
                     }
