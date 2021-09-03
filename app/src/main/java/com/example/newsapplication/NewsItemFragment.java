@@ -31,6 +31,18 @@ public class NewsItemFragment extends Fragment {
     private String title;
     private List<NewsBean> newsbeanlist = new ArrayList<>();
     private XRecyclerView mainrecyclerview;
+    private String keyword = "";
+    private String starttime = "1949-10-10";
+    private String endtime="2021-09-02";
+    int cursize = 30;
+
+    public NewsItemFragment(String keyword, String category, String starttime, String endtime){
+        this.keyword = keyword;
+        this.title = category;
+        this.starttime = starttime;
+        this.endtime = endtime;
+    }
+
 
     public NewsItemFragment(String newstype) {
         this.title = newstype;
@@ -61,7 +73,7 @@ public class NewsItemFragment extends Fragment {
         mainrecyclerview.getDefaultFootView().setLoadingHint("Loading more data");
         mainrecyclerview.getDefaultFootView().setNoMoreHint("Finish loading");
 
-        SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate=2020-08-20&endDate=2021-08-30&words=&categories="+title);
+        SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=15&startDate="+starttime+"&endDate="+endtime+"&words="+keyword+"&categories="+title);
         searchThread.start();
 
         mainrecyclerview.setLoadingListener(new XRecyclerView.LoadingListener() {
@@ -83,7 +95,8 @@ public class NewsItemFragment extends Fragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size=30&startDate=2020-08-20&endDate=2021-08-30&words=&categories="+title);
+                        SearchThread searchThread = new SearchThread("https://api2.newsminer.net/svc/news/queryNewsList?size="+cursize+"&startDate="+starttime+"&endDate="+endtime+"&words="+keyword+"&categories="+title);
+                        cursize += 15;
                         searchThread.start();
                         mainrecyclerview.setLimitNumberToCallLoadMore(2);
                         mainrecyclerview.loadMoreComplete();
