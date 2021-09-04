@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 
-public class SetTypeActivity extends AppCompatActivity {
+public class SetTypeActivity extends AppCompatActivity{
 
     CheckBox entertainment;
     CheckBox military;

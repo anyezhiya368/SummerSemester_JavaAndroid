@@ -11,8 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import android.app.SearchManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,6 +33,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.newsapplication.newsmodel.NewsBean;
 import com.example.newsapplication.newsmodel.NewsSource;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.jcodecraeer.xrecyclerview.ProgressStyle;
@@ -46,10 +50,15 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity{
 
     List<NewsItemFragment> fragmentList = new ArrayList<>();
     List<String> newstypeList = new ArrayList<>();
+    DrawerLayout mDrawerLayout;
+
+    public MainActivity(){
+        super();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -59,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbarmain = findViewById(R.id.toolbarmain);
         setSupportActionBar(toolbarmain);
 
+        MyDatabaseHelper dbHelper = new MyDatabaseHelper(this, "Local.db", null, 1);
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
+        //sqLiteDatabase.delete("History", "id > ?", new String[]{"-1"});
+        //sqLiteDatabase.delete("Collection", "id > ?", new String[]{"-1"});
         //娱乐、军事、教育、文化、健康、财经、体育、汽车、科技、社会
         newstypeList.add("娱乐");
         newstypeList.add("军事");
@@ -132,6 +145,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent_send);
             }
         });
+
+        NavigationView navigationView = findViewById(R.id.drawer_nav);
+        Menu navmenu = navigationView.getMenu();
+        MenuItem collectionitem = navmenu.getItem(0);
+        MenuItem historyitem = navmenu.getItem(1);
+        collectionitem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent intent_collection = new Intent(MainActivity.this, CollectionActivity.class);
+                startActivity(intent_collection);
+                return false;
+            }
+        });
+        historyitem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent intent_history = new Intent(MainActivity.this, HistoryActivity.class);
+                startActivity(intent_history);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -154,13 +188,14 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            DrawerLayout mDrawerLayout = findViewById(R.id.maindrawerlayout);
+            mDrawerLayout = findViewById(R.id.maindrawerlayout);
             mDrawerLayout.openDrawer(GravityCompat.END);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
 }
 

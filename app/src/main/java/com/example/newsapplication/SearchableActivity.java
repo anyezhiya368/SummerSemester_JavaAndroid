@@ -21,7 +21,7 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 
 import javax.xml.xpath.XPathException;
 
-public class SearchableActivity extends AppCompatActivity {
+public class SearchableActivity extends AppCompatActivity{
 
     Toolbar toolbar;
     NewsItemFragment newssearch;

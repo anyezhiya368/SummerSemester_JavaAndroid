@@ -17,6 +17,20 @@ public class NewsBean {
     private String category;
     private String content;
 
+    public NewsBean(){}
+
+    public NewsBean(String image, String publishTime, String video, String title, String url, String publisher
+                    , String content)
+    {
+        this.image = image;
+        this.publishTime = publishTime;
+        this.video = video;
+        this.title = title;
+        this.url = url;
+        this.publisher = publisher;
+        this.content =  content;
+    }
+
     public String getContent() {
         return content;
     }

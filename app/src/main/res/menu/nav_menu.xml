@@ -5,12 +5,12 @@
         <item
             android:id="@+id/collect"
             android:icon="@drawable/ic_baseline_star_border_24"
-            android:title="收藏记录"></item>
+            android:title="收藏记录"/>
 
         <item
             android:id="@+id/history"
             android:icon="@drawable/ic_baseline_schedule_24"
-            android:title="浏览历史"></item>
+            android:title="浏览历史"/>
 
     </group>
 </menu>

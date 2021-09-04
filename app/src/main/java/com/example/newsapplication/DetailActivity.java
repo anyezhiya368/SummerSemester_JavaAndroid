@@ -2,8 +2,12 @@ package com.example.newsapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
@@ -13,14 +17,19 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.example.newsapplication.newsmodel.NewsBean;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.w3c.dom.Text;
 
 import java.util.List;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity{
 
     private NewsBean newsBean;
+    private FloatingActionButton fab_uncollected;
+    private FloatingActionButton fab_collected;
+    SQLiteDatabase db;
+    boolean collected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,5 +74,61 @@ public class DetailActivity extends AppCompatActivity {
         titletv.setText(title);
         sourcetv.setText(source);
         contenttv.setText(content);
+
+        fab_collected = findViewById(R.id.fab_collected);
+        fab_uncollected = findViewById(R.id.fab_uncollected);
+
+        MyDatabaseHelper dbHelper = new MyDatabaseHelper(DetailActivity.this, "Local.db", null, 1);
+
+
+        //Search the collection.db database to find whether the article has been collected
+        db = dbHelper.getWritableDatabase();
+        Cursor cursor = db.query("Collection", null, null, null, null,
+                null, null);
+        if(cursor.moveToFirst()){
+            do{
+                String titledb = cursor.getString(1);
+                Log.e("TAG", titledb);
+                if(titledb.equals(title)) {
+                    collected = true;
+                    break;
+                }
+            }while(cursor.moveToNext());
+        }cursor.close();
+
+        if(collected){
+            fab_collected.setVisibility(View.VISIBLE);
+            fab_uncollected.setVisibility(View.INVISIBLE);
+        }else{
+            fab_uncollected.setVisibility(View.VISIBLE);
+            fab_collected.setVisibility(View.INVISIBLE);
+        }
+
+        fab_uncollected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fab_uncollected.setVisibility(View.INVISIBLE);
+                fab_collected.setVisibility(View.VISIBLE);
+                db = dbHelper.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                values.put("title", title);
+                values.put("url", url);
+                values.put("image", imagestring);
+                values.put("video", video);
+                values.put("publisher", publisher);
+                values.put("time", time);
+                values.put("content", content);
+                db.insert("Collection", null, values);
+            }
+        });
+        fab_collected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fab_collected.setVisibility(View.INVISIBLE);
+                fab_uncollected.setVisibility(View.VISIBLE);
+                db = dbHelper.getWritableDatabase();
+                db.delete("Collection", "title = ?", new String[]{title});
+            }
+        });
     }
 }

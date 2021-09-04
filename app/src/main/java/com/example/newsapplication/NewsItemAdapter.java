@@ -1,7 +1,10 @@
 package com.example.newsapplication;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +24,7 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         private Context context;
         private List<NewsBean> newsBeanList;
+        MyDatabaseHelper dbHelper;
 
         public NewsItemAdapter(Context context, List<NewsBean> newsBeanList) {
             this.context = context;
@@ -109,14 +113,53 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            boolean viewed = false;
+            dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cursor = db.query("History", null, null, null, null, null, null);
+            if(cursor.moveToFirst()){
+                do{
+                    String titledb = cursor.getString(1);
+                    if(titledb.equals(newsBeanList.get(holder.getAdapterPosition() - 1).getTitle())){
+                        viewed = true;
+                        break;
+                    }}while(cursor.moveToNext());
+            }cursor.close();
+
             if(holder instanceof NoImageHolder){
                 NoImageHolder newsholder = (NoImageHolder) holder;
                 newsholder.titletv.setText(newsBeanList.get(position).getTitle());
+                if(viewed)
+                    newsholder.titletv.setTextColor(0xFFBFBFBF);
                 newsholder.sourcetv.setText(newsBeanList.get(position).getPublisher());
 
                 newsholder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        boolean clickviewed = false;
+                        dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+                        Cursor cursor = db.query("History", null, null, null, null, null, null);
+                        if(cursor.moveToFirst()){
+                            do{
+                                String titledb = cursor.getString(1);
+                                if(titledb.equals(newsBeanList.get(holder.getAdapterPosition() - 1).getTitle())){
+                                    clickviewed = true;
+                                    break;
+                                }}while(cursor.moveToNext());
+                        }cursor.close();
+                        if(!clickviewed){
+                        dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+                        SQLiteDatabase db1 = dbHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        values.put("title", newsBeanList.get(holder.getAdapterPosition() - 1).getTitle());
+                        values.put("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
+                        values.put("image", newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
+                        values.put("video", newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
+                        values.put("publisher", newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
+                        values.put("time", newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
+                        values.put("content", newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
+                        db1.insert("History", null, values);}
                         Intent intent = new Intent(context, DetailActivity.class);
                         intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
                         intent.putExtra("image", newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
@@ -126,17 +169,44 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                         intent.putExtra("time",newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
                         intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
                         context.startActivity(intent);
+                        newsholder.titletv.setTextColor(0xFFBFBFBF);
                     }
                 });
             }else if(holder instanceof OneImageHolder) {
                 OneImageHolder newsholder = (OneImageHolder) holder;
                 newsholder.titletv.setText(newsBeanList.get(position).getTitle());
+                if(viewed)
+                    newsholder.titletv.setTextColor(0xFFBFBFBF);
                 newsholder.sourcetv.setText(newsBeanList.get(position).getPublisher());
                 Glide.with(context).load(newsBeanList.get(position).getImage().get(0)).into(newsholder.image);
 
                 newsholder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        boolean clickviewed = false;
+                        dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+                        Cursor cursor = db.query("History", null, null, null, null, null, null);
+                        if(cursor.moveToFirst()){
+                            do{
+                                String titledb = cursor.getString(1);
+                                if(titledb.equals(newsBeanList.get(holder.getAdapterPosition() - 1).getTitle())){
+                                    clickviewed = true;
+                                    break;
+                                }}while(cursor.moveToNext());
+                        }cursor.close();
+                        if(!clickviewed){
+                        dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+                        SQLiteDatabase db1 = dbHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        values.put("title", newsBeanList.get(holder.getAdapterPosition() - 1).getTitle());
+                        values.put("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
+                        values.put("image", newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
+                        values.put("video", newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
+                        values.put("publisher", newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
+                        values.put("time", newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
+                        values.put("content", newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
+                        db1.insert("History", null, values);}
                         Intent intent = new Intent(context, DetailActivity.class);
                         intent.putExtra("image",newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
                         intent.putExtra("video",newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
@@ -146,11 +216,14 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                         intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
                         intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
                         context.startActivity(intent);
+                        newsholder.titletv.setTextColor(0xFFBFBFBF);
                     }
                 });
             }else if(holder instanceof ThreeImageHolder){
                 ThreeImageHolder newsholder = (ThreeImageHolder) holder;
                 newsholder.titletv.setText(newsBeanList.get(position).getTitle());
+                if(viewed)
+                    newsholder.titletv.setTextColor(0xFFBFBFBF);
                 newsholder.sourcetv.setText(newsBeanList.get(position).getPublisher());
                 Glide.with(context).load(newsBeanList.get(position).getImage().get(0)).into(newsholder.image1);
                 Glide.with(context).load(newsBeanList.get(position).getImage().get(1)).into(newsholder.image2);
@@ -159,6 +232,30 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                 newsholder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        boolean clickviewed = false;
+                        dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+                        Cursor cursor = db.query("History", null, null, null, null, null, null);
+                        if(cursor.moveToFirst()){
+                            do{
+                                String titledb = cursor.getString(1);
+                                if(titledb.equals(newsBeanList.get(holder.getAdapterPosition() - 1).getTitle())){
+                                    clickviewed = true;
+                                    break;
+                                }}while(cursor.moveToNext());
+                        }cursor.close();
+                        if(!clickviewed){
+                        dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+                        SQLiteDatabase db1 = dbHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        values.put("title", newsBeanList.get(holder.getAdapterPosition() - 1).getTitle());
+                        values.put("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
+                        values.put("image", newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
+                        values.put("video", newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
+                        values.put("publisher", newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
+                        values.put("time", newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
+                        values.put("content", newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
+                        db1.insert("History", null, values);}
                         Intent intent = new Intent(context, DetailActivity.class);
                         intent.putExtra("image",newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
                         intent.putExtra("video",newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
@@ -168,17 +265,44 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                         intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
                         intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
                         context.startActivity(intent);
+                        newsholder.titletv.setTextColor(0xFFBFBFBF);
                     }
                 });
             }else{
                 BigImageHolder newsholder = (BigImageHolder) holder;
                 newsholder.titletv.setText(newsBeanList.get(position).getTitle());
+                if(viewed)
+                    newsholder.titletv.setTextColor(0xFFBFBFBF);
                 newsholder.sourcetv.setText(newsBeanList.get(position).getPublisher());
                 Glide.with(context).load(newsBeanList.get(position).getImage().get(0)).into(newsholder.image);
 
                 newsholder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        boolean clickviewed = false;
+                        dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+                        Cursor cursor = db.query("History", null, null, null, null, null, null);
+                        if(cursor.moveToFirst()){
+                            do{
+                                String titledb = cursor.getString(1);
+                                if(titledb.equals(newsBeanList.get(holder.getAdapterPosition() - 1).getTitle())){
+                                    clickviewed = true;
+                                    break;
+                                }}while(cursor.moveToNext());
+                        }cursor.close();
+                        if(!clickviewed){
+                        dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+                        SQLiteDatabase db1 = dbHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        values.put("title", newsBeanList.get(holder.getAdapterPosition() - 1).getTitle());
+                        values.put("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
+                        values.put("image", newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
+                        values.put("video", newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
+                        values.put("publisher", newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
+                        values.put("time", newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
+                        values.put("content", newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
+                        db1.insert("History", null, values);}
                         Intent intent = new Intent(context, DetailActivity.class);
                         intent.putExtra("image",newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
                         intent.putExtra("video",newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
@@ -188,6 +312,7 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                         intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
                         intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
                         context.startActivity(intent);
+                        newsholder.titletv.setTextColor(0xFFBFBFBF);
                     }
                 });
             }
