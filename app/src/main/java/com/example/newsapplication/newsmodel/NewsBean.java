@@ -12,7 +12,6 @@ public class NewsBean {
     private String video;
     private String title;
     private String url;
-    private List<Puborg> puborgList;
     private String publisher;
     private String category;
     private String content;
@@ -53,14 +52,6 @@ public class NewsBean {
 
     public void setPublisher(String publisherstring) {
         this.publisher = publisherstring;
-    }
-
-    public List<Puborg> getPuborgList() {
-        return puborgList;
-    }
-
-    public void setPuborgList(List<Puborg> puborgList) {
-        this.puborgList = puborgList;
     }
 
     public String getUrl() {

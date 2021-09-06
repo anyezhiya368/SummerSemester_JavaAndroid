@@ -6,12 +6,14 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.MediaActionSound;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -62,6 +64,11 @@ public class DetailActivity extends AppCompatActivity{
         if(video.length() != 0){
             videolayout.setVisibility(View.VISIBLE);
             imagelayout.setVisibility(View.GONE);
+            MediaController mediaController = new MediaController(this);
+            videoView.setMediaController(mediaController);
+            videoView.requestFocus();
+            videoView.setVideoPath(video);
+            videoView.start();
         }else{
             videolayout.setVisibility(View.GONE);
             if(stringList.size() == 0){
