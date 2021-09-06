@@ -6,12 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -94,6 +97,21 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         }
 
+    class VideoHolder extends RecyclerView.ViewHolder{
+        public TextView titletv;
+        public TextView sourcetv;
+        public VideoView vv;
+
+        public VideoHolder(View newsitem){
+            super(newsitem);
+
+            titletv = newsitem.findViewById(R.id.video_title);
+            sourcetv = newsitem.findViewById(R.id.video_source);
+            vv = newsitem.findViewById(R.id.video_video);
+
+        }
+    }
+
         @NonNull
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -104,6 +122,9 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                 case 1:
                     View newsitem_one = LayoutInflater.from(context).inflate(R.layout.newsitem_oneimage, parent, false);
                     return new OneImageHolder(newsitem_one);
+                case -1:
+                    View newsitem_video = LayoutInflater.from(context).inflate(R.layout.newsitem_video, parent, false);
+                    return new VideoHolder(newsitem_video);
                 case 100:
                     View newsitem_big = LayoutInflater.from(context).inflate(R.layout.newsitem_bigimage, parent, false);
                     return new BigImageHolder(newsitem_big);
@@ -273,7 +294,60 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                         newsholder.titletv.setTextColor(0xFFBFBFBF);
                     }
                 });
-            }else{
+            }else if(holder instanceof VideoHolder){
+                VideoHolder newsholder = (VideoHolder) holder;
+                newsholder.titletv.setText(newsBeanList.get(position).getTitle());
+                if(viewed)
+                    newsholder.titletv.setTextColor(0xFFBFBFBF);
+                newsholder.sourcetv.setText(newsBeanList.get(position).getPublisher());
+                MediaController mediaController = new MediaController(context);
+                newsholder.vv.setMediaController(mediaController);
+                newsholder.vv.requestFocus();
+                newsholder.vv.setVideoPath(newsBeanList.get(position).getVideo());
+                newsholder.vv.start();
+
+                newsholder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        boolean clickviewed = false;
+                        dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+                        SQLiteDatabase db = dbHelper.getWritableDatabase();
+                        Cursor cursor = db.query("History", null, null, null, null, null, null);
+                        if(cursor.moveToFirst()){
+                            do{
+                                String titledb = cursor.getString(1);
+                                if(titledb.equals(newsBeanList.get(holder.getAdapterPosition() - 1).getTitle())
+                                ){
+                                    clickviewed = true;
+                                    break;
+                                }
+                            }while(cursor.moveToNext());
+                        }cursor.close();
+                        dbHelper = new MyDatabaseHelper(context, "Local.db", null, 1);
+                        SQLiteDatabase db1 = dbHelper.getWritableDatabase();
+                        ContentValues values = new ContentValues();
+                        values.put("title", newsBeanList.get(holder.getAdapterPosition() - 1).getTitle());
+                        values.put("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
+                        values.put("image", newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
+                        values.put("video", newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
+                        values.put("publisher", newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
+                        values.put("time", newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
+                        values.put("content", newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
+                        db1.insert("History", null, values);
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra("image",newsBeanList.get(holder.getAdapterPosition() - 1).getImageString());
+                        intent.putExtra("video",newsBeanList.get(holder.getAdapterPosition() - 1).getVideo());
+                        intent.putExtra("title",newsBeanList.get(holder.getAdapterPosition() - 1).getTitle());
+                        intent.putExtra("publisher",newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
+                        intent.putExtra("time",newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
+                        intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
+                        intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
+                        ((Activity)context).startActivityForResult(intent, 1);
+                        newsholder.titletv.setTextColor(0xFFBFBFBF);
+                    }
+                });
+            }
+            else{
                 BigImageHolder newsholder = (BigImageHolder) holder;
                 newsholder.titletv.setText(newsBeanList.get(position).getTitle());
                 if(viewed)
@@ -331,6 +405,8 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
             return 0;
         if(newsBeanList.get(position).getImage().size() >= 3)
             return 3;
+        if(newsBeanList.get(position).getVideo().length() > 0)
+            return -1;
         if(newsBeanList.get(position).getTitle().length() % 2 == 0)
             return 100;
         else
