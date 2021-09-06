@@ -1,5 +1,6 @@
 package com.example.newsapplication;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -168,7 +169,7 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                         intent.putExtra("publisher",newsBeanList.get(holder.getAdapterPosition() - 1).getPublisher());
                         intent.putExtra("time",newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
                         intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
-                        context.startActivity(intent);
+                        ((Activity)context).startActivityForResult(intent, 1);
                         newsholder.titletv.setTextColor(0xFFBFBFBF);
                     }
                 });
@@ -215,7 +216,7 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                         intent.putExtra("time",newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
                         intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
                         intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
-                        context.startActivity(intent);
+                        ((Activity)context).startActivityForResult(intent, 1);
                         newsholder.titletv.setTextColor(0xFFBFBFBF);
                     }
                 });
@@ -264,7 +265,7 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                         intent.putExtra("time",newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
                         intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
                         intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
-                        context.startActivity(intent);
+                        ((Activity)context).startActivityForResult(intent, 1);
                         newsholder.titletv.setTextColor(0xFFBFBFBF);
                     }
                 });
@@ -311,7 +312,7 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
                         intent.putExtra("time",newsBeanList.get(holder.getAdapterPosition() - 1).getPublishTime());
                         intent.putExtra("content",newsBeanList.get(holder.getAdapterPosition() - 1).getContent());
                         intent.putExtra("url", newsBeanList.get(holder.getAdapterPosition() - 1).getUrl());
-                        context.startActivity(intent);
+                        ((Activity)context).startActivityForResult(intent, 1);
                         newsholder.titletv.setTextColor(0xFFBFBFBF);
                     }
                 });
@@ -335,5 +336,4 @@ public class NewsItemAdapter  extends RecyclerView.Adapter<RecyclerView.ViewHold
         public int getItemCount() {
             return newsBeanList.size();
         }
-
 }

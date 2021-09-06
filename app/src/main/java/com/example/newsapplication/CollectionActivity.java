@@ -1,11 +1,13 @@
 package com.example.newsapplication;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -85,5 +87,28 @@ public class CollectionActivity extends AppCompatActivity {
             finish();
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == 1) {
+                String titleintent = data.getStringExtra("title");
+                for (NewsBean newsbean:
+                     newsBeanList) {
+                    if(newsbean.getTitle().equals(titleintent)){
+                        newsBeanList.remove(newsbean);
+                        break;
+                    }
+                }
+            }xRecyclerView = findViewById(R.id.collection_xrecyclerview);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(CollectionActivity.this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            xRecyclerView.setLayoutManager(linearLayoutManager);
+            xRecyclerView.setAdapter(new NewsItemAdapter(CollectionActivity.this, newsBeanList));
+            xRecyclerView.setPullRefreshEnabled(false);
+            xRecyclerView.setLoadingMoreEnabled(false);
+        }
     }
 }

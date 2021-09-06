@@ -128,6 +128,9 @@ public class DetailActivity extends AppCompatActivity{
                 fab_uncollected.setVisibility(View.VISIBLE);
                 db = dbHelper.getWritableDatabase();
                 db.delete("Collection", "title = ?", new String[]{title});
+                Intent intent2 = new Intent();
+                setResult(1, intent2);
+                intent2.putExtra("title", title);
             }
         });
     }
