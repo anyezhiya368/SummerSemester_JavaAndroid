@@ -1,11 +1,14 @@
 package com.example.newsapplication;
 
 import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -79,6 +82,16 @@ public class NewsItemFragment extends Fragment {
         mainrecyclerview.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
+                boolean connected = false;
+                Runtime runtime = Runtime.getRuntime();
+                try {
+                    Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+                    int     exitValue = ipProcess.waitFor();
+                    connected = (exitValue == 0);
+                }
+                catch (IOException e)          { e.printStackTrace(); }
+                catch (InterruptedException e) { e.printStackTrace(); }
+                if(connected){
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -88,12 +101,30 @@ public class NewsItemFragment extends Fragment {
                         searchThread.start();
                         mainrecyclerview.refreshComplete();
                     }
-                },1000);
-                //refresh data here
+                },1000);}
+                else{
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(), "You are not connected to the Internet.", Toast.LENGTH_SHORT).show();
+                            mainrecyclerview.refreshComplete();
+                        }
+                    }, 1000);
+                }
             }
 
             @Override
             public void onLoadMore() {
+                boolean connected = false;
+                Runtime runtime = Runtime.getRuntime();
+                try {
+                    Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
+                    int     exitValue = ipProcess.waitFor();
+                    connected = (exitValue == 0);
+                }
+                catch (IOException e)          { e.printStackTrace(); }
+                catch (InterruptedException e) { e.printStackTrace(); }
+                if(connected){
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -103,8 +134,16 @@ public class NewsItemFragment extends Fragment {
                         mainrecyclerview.setLimitNumberToCallLoadMore(2);
                         mainrecyclerview.loadMoreComplete();
                     }
-                },  1000);
-                // load more data here
+                },  1000);}
+                else{
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(), "You are not connected to the Internet.", Toast.LENGTH_SHORT).show();
+                            mainrecyclerview.loadMoreComplete();
+                        }
+                    }, 1000);
+                }
             }
         });
 
