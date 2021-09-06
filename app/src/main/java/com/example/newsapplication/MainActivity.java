@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity{
 
         MyDatabaseHelper dbHelper = new MyDatabaseHelper(this, "Local.db", null, 1);
         SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
-        //sqLiteDatabase.delete("History", "id > ?", new String[]{"-1"});
-        //sqLiteDatabase.delete("Collection", "id > ?", new String[]{"-1"});
+        sqLiteDatabase.delete("History", "id > ?", new String[]{"-1"});
+        sqLiteDatabase.delete("Collection", "id > ?", new String[]{"-1"});
         //娱乐、军事、教育、文化、健康、财经、体育、汽车、科技、社会
         newstypeList.add("娱乐");
         newstypeList.add("军事");

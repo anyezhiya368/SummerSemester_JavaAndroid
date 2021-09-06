@@ -35,7 +35,7 @@
             android:paddingBottom="3dp"
             android:layout_width="match_parent"
             android:layout_below="@+id/threetitle"
-            android:layout_height="95dp"
+            android:layout_height="85dp"
             android:orientation="horizontal">
 
             <com.makeramen.roundedimageview.RoundedImageView
