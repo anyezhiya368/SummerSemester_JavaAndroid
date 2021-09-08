@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">com.java.wangguanghan</string>
+    <string name="app_name">爪洼新闻</string>
     <string name="search_hint">关键词|分类|开始时间|结束时间</string>
     <string name="toolbarmain_search">Search View</string>
     <string name="action_settings">ToolBar Button</string>

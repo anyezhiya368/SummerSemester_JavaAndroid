@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.newsapplication">
+    package="com.java.wangguanghan">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -14,19 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NewsApplication">
         <activity
-            android:name=".HistoryActivity"
+            android:name="com.java.wangguanghan.HistoryActivity"
             android:exported="true" />
         <activity
-            android:name=".CollectionActivity"
+            android:name="com.java.wangguanghan.CollectionActivity"
             android:exported="true" />
         <activity
-            android:name=".SetTypeActivity"
+            android:name="com.java.wangguanghan.SetTypeActivity"
             android:exported="true" />
         <activity
-            android:name=".DetailActivity"
+            android:name="com.java.wangguanghan.DetailActivity"
             android:exported="true" />
         <activity
-            android:name=".SearchableActivity"
+            android:name="com.java.wangguanghan.SearchableActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -37,7 +37,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.java.wangguanghan.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

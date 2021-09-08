@@ -39,6 +39,34 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginTop="2dp"
+                android:id="@+id/detail_image_layout1"
+                android:layout_width="match_parent"
+                android:layout_height="230dp">
+
+                <ImageView
+                    android:id="@+id/detail_image1"
+                    android:scaleType="fitXY"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="2dp"
+                android:id="@+id/detail_image_layout2"
+                android:layout_width="match_parent"
+                android:layout_height="230dp">
+
+                <ImageView
+                    android:id="@+id/detail_image2"
+                    android:scaleType="fitXY"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:orientation="vertical"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
